@@ -14,11 +14,12 @@ use OxidEsales\DemoDataInstaller\Framework\Module\Demodata\Exception\DemodataExc
 use OxidEsales\EshopCommunity\Internal\Framework\Database\ConnectionFactoryInterface;
 use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
 use OxidEsales\EshopCommunity\Internal\Transition\Utility\BasicContextInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 
 use function sprintf;
 use function strtolower;
+
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 
 class DemodataDao implements DemodataDaoInterface
 {

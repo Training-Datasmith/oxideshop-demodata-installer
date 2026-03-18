@@ -9,11 +9,14 @@ declare(strict_types=1);
 
 namespace OxidEsales\DemoDataInstaller\Framework\Module\Demodata\Exception;
 
-use Exception;
-use Throwable;
 use function assert;
 use function count;
+
+use Exception;
+
 use function reset;
+
+use Throwable;
 
 class AggregateException extends Exception implements AggregateExceptionInterface
 {
