@@ -107,7 +107,7 @@ class DemodataDao implements DemodataDaoInterface
             $this->basicContext->getComposerVendorName(),
             sprintf(
                 'oxideshop-demodata-%s',
-                strtolower($this->basicContext->getEdition()->value)
+                strtolower((string) $this->basicContext->getEdition()->value)
             ),
             'src',
         );

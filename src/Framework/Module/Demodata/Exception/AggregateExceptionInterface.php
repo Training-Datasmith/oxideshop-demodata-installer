@@ -13,9 +13,6 @@ use Throwable;
 
 interface AggregateExceptionInterface extends Throwable
 {
-    /**
-     * @param Throwable $exception
-     */
     public function add(Throwable $exception): void;
 
     /**

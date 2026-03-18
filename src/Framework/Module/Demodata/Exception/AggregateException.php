@@ -18,7 +18,7 @@ use function reset;
 class AggregateException extends Exception implements AggregateExceptionInterface
 {
     /** @var (Throwable)[] */
-    private $exceptions = [];
+    private array $exceptions = [];
 
     /**
      * @param (Throwable)[] $exceptions
@@ -31,9 +31,6 @@ class AggregateException extends Exception implements AggregateExceptionInterfac
         }
     }
 
-    /**
-     * @param Throwable $exception
-     */
     public function add(Throwable $exception): void
     {
         $this->exceptions[] = $exception;
