@@ -2,14 +2,14 @@ services:
     _defaults:
         autowire: true
 
-    OxidEsales\DemoDataInstaller\Framework\Module\Demodata\DemodataDaoInterface:
-        class: OxidEsales\DemoDataInstaller\Framework\Module\Demodata\DemodataDao
+    Oxid_Esales\Demo_Data_Installer\Framework\Module\Demodata\Demodata_Dao_Interface:
+        class: Oxid_Esales\Demo_Data_Installer\Framework\Module\Demodata\Demodata_Dao
         arguments:
             Symfony\Component\Filesystem\Filesystem: '@oxid_esales.symfony.file_system'
         public: true
 
-    OxidEsales\DemoDataInstaller\Framework\Module\Demodata\DemodataCommand:
-        class: OxidEsales\DemoDataInstaller\Framework\Module\Demodata\DemodataCommand
+    Oxid_Esales\Demo_Data_Installer\Framework\Module\Demodata\Demodata_Command:
+        class: Oxid_Esales\Demo_Data_Installer\Framework\Module\Demodata\Demodata_Command
         tags:
             - { name: 'console.command', command: 'oe:setup:demodata' }
         public: true
