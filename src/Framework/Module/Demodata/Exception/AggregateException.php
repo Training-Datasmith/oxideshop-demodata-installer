@@ -4,25 +4,18 @@
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
  */
-
-declare(strict_types=1);
-
-namespace OxidEsales\DemoDataInstaller\Framework\Module\Demodata\Exception;
+declare (strict_types=1);
+namespace Oxid_Esales\Demo_Data_Installer\Framework\Module\Demodata\Exception;
 
 use function assert;
 use function count;
-
 use Exception;
-
 use function reset;
-
 use Throwable;
-
-class AggregateException extends Exception implements AggregateExceptionInterface
+class Aggregate_Exception extends Exception implements Aggregate_Exception_Interface
 {
     /** @var (Throwable)[] */
     private array $exceptions = [];
-
     /**
      * @param (Throwable)[] $exceptions
      */
@@ -33,30 +26,26 @@ class AggregateException extends Exception implements AggregateExceptionInterfac
             $this->add($exception);
         }
     }
-
     public function add(Throwable $exception): void
     {
         $this->exceptions[] = $exception;
-        $this->message .= "\n" . $exception->getMessage();
+        $this->message .= "\n" . $exception->get_message();
     }
-
     /**
      * @return (Throwable)[]
      */
-    public function getExceptions(): array
+    public function get_exceptions(): array
     {
         return $this->exceptions;
     }
-
-    public function hasExceptions(): bool
+    public function has_exceptions(): bool
     {
-        return ! empty($this->exceptions);
+        return !empty($this->exceptions);
     }
-
     /**
      * @param (Throwable)[] $exceptions
      */
-    public static function throwExceptions(array $exceptions): void
+    public static function throw_exceptions(array $exceptions): void
     {
         $count = count($exceptions);
         if ($count === 0) {

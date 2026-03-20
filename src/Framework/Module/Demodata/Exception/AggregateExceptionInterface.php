@@ -4,26 +4,20 @@
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
  */
-
-declare(strict_types=1);
-
-namespace OxidEsales\DemoDataInstaller\Framework\Module\Demodata\Exception;
+declare (strict_types=1);
+namespace Oxid_Esales\Demo_Data_Installer\Framework\Module\Demodata\Exception;
 
 use Throwable;
-
-interface AggregateExceptionInterface extends Throwable
+interface Aggregate_Exception_Interface extends Throwable
 {
     public function add(Throwable $exception): void;
-
     /**
      * @return (Throwable)[]
      */
-    public function getExceptions(): array;
-
-    public function hasExceptions(): bool;
-
+    public function get_exceptions(): array;
+    public function has_exceptions(): bool;
     /**
      * @param (Throwable)[] $exceptions
      */
-    public static function throwExceptions(array $exceptions): void;
+    public static function throw_exceptions(array $exceptions): void;
 }

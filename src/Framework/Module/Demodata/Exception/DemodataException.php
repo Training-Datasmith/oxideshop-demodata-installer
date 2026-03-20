@@ -4,11 +4,9 @@
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
  */
+declare (strict_types=1);
+namespace Oxid_Esales\Demo_Data_Installer\Framework\Module\Demodata\Exception;
 
-declare(strict_types=1);
-
-namespace OxidEsales\DemoDataInstaller\Framework\Module\Demodata\Exception;
-
-class DemodataException extends \Exception
+class Demodata_Exception extends \Exception
 {
 }

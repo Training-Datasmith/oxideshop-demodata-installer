@@ -4,23 +4,19 @@
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
  */
+declare (strict_types=1);
+namespace Oxid_Esales\Demo_Data_Installer\Framework\Module\Demodata;
 
-declare(strict_types=1);
-
-namespace OxidEsales\DemoDataInstaller\Framework\Module\Demodata;
-
-use OxidEsales\DemoDataInstaller\Framework\Module\Demodata\Exception\AggregateException;
-use Symfony\Component\Filesystem\Exception\IOException;
-
-interface DemodataDaoInterface
+use Oxid_Esales\Demo_Data_Installer\Framework\Module\Demodata\Exception\Aggregate_Exception;
+use Symfony\Component\Filesystem\Exception\Io_Exception;
+interface Demodata_Dao_Interface
 {
     /**
      * @throws AggregateException
      */
-    public function checkPreconditions(): void;
-
+    public function check_preconditions(): void;
     /**
      * @throws IOException
      */
-    public function applyDemodata(): void;
+    public function apply_demodata(): void;
 }
