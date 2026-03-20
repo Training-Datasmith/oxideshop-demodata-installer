@@ -7,12 +7,12 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "OxidEsales\\DemoDataInstaller\\": "./src"
+            "Oxid_Esales\\Demo_Data_Installer\\": "./src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "OxidEsales\\DemoDataInstaller\\Tests\\": "tests/"
+            "Oxid_Esales\\Demo_Data_Installer\\Tests\\": "tests/"
         }
     }
 }
