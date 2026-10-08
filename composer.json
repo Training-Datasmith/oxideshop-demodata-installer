@@ -12,7 +12,22 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "OxidEsales\\DemoDataInstaller\\Tests\\": "tests/"
+            "OxidEsales\\DemoDataInstaller\\Tests\\": "tests/",
+            "OxidEsales\\EshopCommunity\\Internal\\Framework\\Edition\\": "tests/Stubs/OxidEsales/EshopCommunity/Internal/Framework/Edition/",
+            "OxidEsales\\EshopCommunity\\Internal\\Framework\\Database\\": "tests/Stubs/OxidEsales/EshopCommunity/Internal/Framework/Database/",
+            "OxidEsales\\EshopCommunity\\Internal\\Transition\\Utility\\": "tests/Stubs/OxidEsales/EshopCommunity/Internal/Transition/Utility/"
         }
+    },
+    "require-dev": {
+        "doctrine/dbal": "^4.2.5",
+        "phpunit/phpunit": "^11.5",
+        "symfony/console": "^7.3",
+        "symfony/filesystem": "^7.3"
+    },
+    "config": {
+        "platform": {
+            "php": "8.2.99"
+        },
+        "sort-packages": true
     }
 }

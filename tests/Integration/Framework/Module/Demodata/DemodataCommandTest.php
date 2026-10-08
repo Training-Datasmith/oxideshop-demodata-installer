@@ -1,82 +1,80 @@
 <?php
 
-/**
- * Copyright © OXID eSales AG. All rights reserved.
- * See LICENSE file for license details.
- */
-
 declare(strict_types=1);
 
 namespace OxidEsales\DemoDataInstaller\Tests\Integration\Framework\Module\Demodata;
 
+use Doctrine\DBAL\Exception as DbalException;
 use OxidEsales\DemoDataInstaller\Framework\Module\Demodata\DemodataCommand;
-use OxidEsales\DemoDataInstaller\Framework\Module\Demodata\DemodataDao;
-use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactory;
-use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
-use OxidEsales\EshopCommunity\Internal\Framework\Edition\Edition;
-use OxidEsales\EshopCommunity\Internal\Transition\Utility\BasicContext;
-use OxidEsales\EshopCommunity\Tests\ContainerTrait;
-use OxidEsales\EshopCommunity\Tests\DatabaseTrait;
-use OxidEsales\EshopCommunity\Tests\Unit\Internal\BasicContextStub;
-use OxidEsales\EshopCommunity\Tests\Unit\Internal\ContextStub;
-use PHPUnit\Framework\TestCase;
+use OxidEsales\DemoDataInstaller\Tests\Support\DatabaseTestCase;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Path;
 
-final class DemodataCommandTest extends TestCase
+final class DemodataCommandTest extends DatabaseTestCase
 {
-    use ContainerTrait;
-    use DatabaseTrait;
-
-    private QueryBuilderFactory $queryBuilderFactory;
-    private string $testFile;
-
-    public function setUp(): void
+    public function testExecuteInstallsDemodataAndReturnsSuccess(): void
     {
-        parent::setUp();
+        $fixture = $this->createFixture();
+        $tester = new CommandTester(new DemodataCommand($this->createDao($fixture['context'])));
 
-        $this->queryBuilderFactory = $this->get(QueryBuilderFactoryInterface::class);
-        $this->testFile = Path::join((new BasicContext())->getOutPath(), 'testfile');
+        $status = $tester->execute([]);
+
+        $this->assertSame(Command::SUCCESS, $status);
+        $display = $tester->getDisplay();
+        $this->assertStringContainsString('Running precondition checks...', $display);
+        $this->assertStringContainsString('Applying demodata', $display);
+        $this->assertSame('First', $this->fetchArticleTitle('demo-1'));
+        $this->assertSame(
+            'demo-picture',
+            file_get_contents(Path::join($fixture['outPath'], 'pictures', 'item.txt')),
+        );
     }
 
-    public function tearDown(): void
+    public function testExecuteReturnsFailureAndPrintsEveryPrecondition(): void
     {
-        if (file_exists($this->testFile)) {
-            unlink($this->testFile);
-        }
-        $this->setupShopDatabase();
+        $fixture = $this->createFixture();
+        $this->insertUser();
+        $this->insertArticle();
+        $this->insertCategory();
+
+        $tester = new CommandTester(new DemodataCommand($this->createDao($fixture['context'])));
+        $status = $tester->execute([]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(Command::FAILURE, $status);
+        $this->assertStringContainsString('submitted users', $display);
+        $this->assertStringContainsString('oxarticles', $display);
+        $this->assertStringContainsString('oxcategories', $display);
+        $this->assertStringContainsString(' - ', $display);
+        $this->assertFileDoesNotExist(Path::join($fixture['outPath'], 'pictures', 'item.txt'));
+        $this->assertNull($this->fetchArticleTitle('demo-1'));
     }
 
-    public function testExecuteDemodata(): void
+    public function testExecuteLetsDatabaseErrorsPropagate(): void
     {
-        $commandReturnCode = (new CommandTester(
-            new DemodataCommand(
-                new DemodataDao(
-                    $this->queryBuilderFactory,
-                    $this->getContextStub(),
-                    new Filesystem()
-                )
-            )
-        ))->execute([]);
+        $fixture = $this->createFixture("INSERT INTO `oxarticles` (`OXID`, `OXTITLE`) VALUES ('broken', 'Broken');\nNOT VALID SQL;");
+        $tester = new CommandTester(new DemodataCommand($this->createDao($fixture['context'])));
 
-        $demoProductsCount = $this->queryBuilderFactory
-            ->create()
-            ->select('count(*) as count')
-            ->from('oxarticles')
-            ->fetchFirstColumn();
-
-        $this->assertSame(0, $commandReturnCode);
-        $this->assertFileExists($this->testFile);
-        $this->assertEquals(2, $demoProductsCount);
+        $this->expectException(DbalException::class);
+        $tester->execute([]);
     }
 
-    private function getContextStub(): BasicContextStub
+    public function testExecuteLetsMissingOutDirectoryPropagate(): void
     {
-        $context = new ContextStub();
-        $context->setVendorPath(Path::join(__DIR__, '/Fixtures'));
-        $context->setEdition(Edition::Community);
+        $fixture = $this->createFixture(withOutDirectory: false);
+        $tester = new CommandTester(new DemodataCommand($this->createDao($fixture['context'])));
 
-        return $context;
+        $this->expectException(IOExceptionInterface::class);
+        $tester->execute([]);
+    }
+
+    public function testDescriptionMentionsDemodata(): void
+    {
+        $fixture = $this->createFixture();
+        $command = new DemodataCommand($this->createDao($fixture['context']));
+
+        $this->assertStringContainsString('demodata', strtolower((string) $command->getDescription()));
     }
 }

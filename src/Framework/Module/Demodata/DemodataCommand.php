@@ -40,8 +40,10 @@ class DemodataCommand extends Command
             foreach ($aggregateException->getExceptions() as $exception) {
                 $output->writeln('<error> - ' . $exception->getMessage() . '</error>');
             }
+
+            return Command::FAILURE;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

@@ -80,7 +80,7 @@ class DemodataDao implements DemodataDaoInterface
 
         $queries = file_get_contents($this->getDemodataSqlDump());
         $tables = [];
-        preg_match_all('/INSERT INTO `([a-z\d]*)` .*/m', $queries, $tables);
+        preg_match_all('/INSERT INTO `([a-z\d_]*)` .*/m', $queries, $tables);
 
         $platform = $dbConnection->getDatabasePlatform();
         foreach ($tables[1] as $tableToTruncate) {
